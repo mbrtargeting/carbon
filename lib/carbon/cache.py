@@ -63,7 +63,8 @@ class _MetricCache(defaultdict):
       return self.popitem()
     elif not metric and self.method == "sorted":
       metric = self.queue.next()
-    datapoints = (metric, super(_MetricCache, self).pop(metric))
+    # Save only last value for each timestamp
+    datapoints = (metric, sorted(dict(super(_MetricCache, self).pop(metric)).items(), key=lambda x:x[0]))
     return datapoints
 
   @property
